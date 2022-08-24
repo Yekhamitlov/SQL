@@ -1,0 +1,77 @@
+create database laboratory_work4;
+create table Warehouse(
+    code int PRIMARY KEY,
+    location varchar(255),
+    capacity int
+);
+create table Packs(
+    code varchar(4) PRIMARY KEY ,
+    contents varchar(255),
+    value real,
+    warehouse int
+);
+INSERT INTO Warehouse(code,location, capacity)
+    VALUES (1, 'Chicago', 3),
+            (2, 'Chicago', 4),
+            (3, 'New York', 7),
+           (4, 'Los-Angeles', 2),
+           (5, 'San-Francisco', 8);
+INSERT INTO Packs(code, contents, value, warehouse)
+    VALUES ('0MN7', 'Rocks', 180, 3),
+           ('4H8P', 'Rocks', 250, 1),
+           ('4RT3', 'Scissors', 190, 4),
+           ('7G3H', 'Rocks', 200, 1),
+           ('8JN6', 'Papers', 75, 1),
+           ('8Y6U', 'Papers', 50, 3),
+           ('9J6F', 'Papers', 175, 2),
+           ('LL08', 'Rocks', 140, 4),
+           ('P0H6', 'Scissors', 125, 1),
+           ('P2T6', 'Scissors', 150, 2),
+           ('TUSS', 'Papers', 90,5);
+select * from Packs;
+select * from Packs where value >= 180;
+SELECT DISTINCT ON(contents) *
+FROM Packs;
+SELECT code FROM warehouse;
+select department from employees GROUP BY (department) HAVING count(*)>=2;
+select * from Warehouse where capacity > 2;
+INSERT INTO Warehouse
+    VALUES (6, 'Texas', 5);
+
+INSERT INTO Packs
+    VALUES ('H5RT', 'Papers', 350, 2);
+UPDATE Packs
+SET value = 0.82*value
+    WHERE value  =
+(SELECT *
+FROM Packs
+ORDER BY value DESC
+LIMIT 1
+OFFSET 2);
+DELETE
+FROM Packs
+WHERE value < 150;
+SELECT ALL * FROM Packs;
+select * from packs where(contents='Rocks' and value>100) or (contents = 'Papers' and value>100);
+SELECT   contents,   avg(value) FROM packs GROUP BY contents;
+DELETE
+FROM Warehouse
+WHERE location = 'Chicago'
+RETURNING *;
+select *,
+case when value > 180 then 'more than 180' else 'not more' end
+from Packs;
+select * from Packs where contents NOT IN ('Rocks','Papers');
+select * from Packs where contents IN ('Rocks','Papers');
+select * from Packs where warehouse = ANY (Select code from Warehouse);
+select code from Packs where EXISTS(select * from Warehouse where code = Packs.warehouse);
+select * from Packs where warehouse = All (Select code from Warehouse);
+drop database laboratory_work4;
+drop table Warehouse;
+drop table Packs;
+delete from movies
+    where id in ( select id
+                from movies
+                except
+                select movie_id
+                from movietheaters);
